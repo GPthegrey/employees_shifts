@@ -1,0 +1,4 @@
+<h1>Todos los turnos</h1>
+<% (1..Date.today.end_of_month.day).each do |day| %>
+  <%= render 'shifts/day', shifts: @shifts %>
+<% end %>

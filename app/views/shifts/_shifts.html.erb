@@ -1,0 +1,13 @@
+<% shifts.each do |shift| %>
+<div>
+  <p><%= shift.start_time %> - <%= shift.end_time %></p>
+  <p><%= shift.day_of_week%></p>
+  <p><%= shift.turno %></p>
+  <p>numero de empleados: <%= shift.number_employees %></p>
+  <ul>
+    <% shift.number_employees.each do |employee| %>
+      <li><p><%= employee.name %></p></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
