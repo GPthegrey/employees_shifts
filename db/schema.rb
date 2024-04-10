@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_10_171739) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_10_190733) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,12 +23,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_10_171739) do
     t.index ["shift_id"], name: "index_assignments_on_shift_id"
   end
 
+  create_table "bank_holidays", force: :cascade do |t|
+    t.string "name"
+    t.date "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "employees", force: :cascade do |t|
     t.string "name"
     t.integer "age"
     t.string "position"
     t.date "birthday"
-    t.string "contact"
+    t.string "email"
+    t.string "phone"
     t.boolean "available", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -47,7 +55,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_10_171739) do
   create_table "shifts", force: :cascade do |t|
     t.datetime "start_time"
     t.datetime "end_time"
-    t.string "type"
+    t.string "day_of_week"
+    t.string "turno"
     t.boolean "bank_holiday", default: false
     t.integer "number_employees", default: 2
     t.datetime "created_at", null: false

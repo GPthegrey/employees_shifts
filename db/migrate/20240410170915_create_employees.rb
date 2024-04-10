@@ -5,7 +5,8 @@ class CreateEmployees < ActiveRecord::Migration[7.1]
       t.integer :age
       t.string :position
       t.date :birthday
-      t.string :contact
+      t.string :email
+      t.string :phone
       t.boolean :available, default: true
 
       t.timestamps

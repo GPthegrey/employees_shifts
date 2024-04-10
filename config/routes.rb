@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show]
   resources :employees do
     member do
-      resources :assignments, only: [:create, :destroy]
+      resources :assignments
     end
   end
   resources :shifts
