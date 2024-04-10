@@ -32,29 +32,42 @@ start_date = Date.new(2024, 5, 1)
 end_date = Date.new(2024, 12, 31)
 
 # Iterate through each hour of the year
-  (start_date..end_date).each do |date|
-    (0..23).each do |hour|
-      start_time = DateTime.new(date.year, date.month, date.day, hour, 0, 0)
-      end_time = start_time + 1.hour
+(start_date..end_date).each do |date|
+  (0..23).each do |hour|
+    start_time = DateTime.new(date.year, date.month, date.day, hour, 0, 0)
+    end_time = start_time + 1.hour
 
-      # Create a new shift object for each hour
-      puts 'creating shift'
-      Shift.create(
-        start_time: start_time,
-        end_time: end_time,
-        turno:
-        if start_time.hour >= 7 && start_time.hour < 15
-          'mañana'
-        elsif start_time.hour >= 15 && start_time.hour < 23
-          'tarde'
-        else
-          'noche'
-        end,
-        day_of_week: start_time.strftime('%A'),
-        bank_holiday:
-        if BankHoliday.exists?(date: start_time.to_date) || day_of_week == 'Sunday'
-          return true
-        end
-        )
-    end
+    # Determine shift type and if it's a bank holiday
+    turno =
+      if start_time.hour >= 7 && start_time.hour < 15
+        'mañana'
+      elsif start_time.hour >= 15 && start_time.hour < 23
+        'tarde'
+      else
+        'noche'
+      end
+    day_of_week = start_time.strftime('%A')
+    bank_holiday = BankHoliday.exists?(date: start_time.to_date) || day_of_week == 'Sunday'
+
+    # Determine number of employees based on shift type and bank holiday
+    number_employees =
+      if !bank_holiday && (turno == 'mañana' || turno == 'tarde')
+        4
+      elsif bank_holiday && (turno == 'mañana' || turno == 'tarde')
+        3
+      else
+        2
+      end
+
+    # Create a new shift object for each hour
+    puts 'creating shift'
+    Shift.create(
+      start_time: start_time,
+      end_time: end_time,
+      turno: turno,
+      day_of_week: day_of_week,
+      bank_holiday: bank_holiday,
+      number_employees: number_employees
+    )
+  end
 end
