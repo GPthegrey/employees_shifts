@@ -14,6 +14,22 @@
 puts 'destroying all records'
 BankHoliday.destroy_all
 Shift.destroy_all
+Employee.destroy_all
+
+puts 'creating employees'
+
+Employee.create!(name: 'JORGE', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'MARCOS', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'VALEN', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'POME', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'J.L', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'GONZA', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'Patricio', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'BENJA', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'ARTURO', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'CRISTIAN', position: 'playero', date_of_birth: '1990-01-01')
+Employee.create!(name: 'ANGEL', position: 'encargado', date_of_birth: '1990-01-01')
+Employee.create!(name: 'MICA', position: 'aprendiz', date_of_birth: '1990-01-01')
 
 puts 'creating bank holidays'
 BankHoliday.create(date: Date.new(2024, 5, 1), name: 'dia del trabajador')
