@@ -15,7 +15,11 @@ class ShiftsController < ApplicationController
       @shifts = Shift.where(start_time: @selected_date.beginning_of_day..@selected_date.end_of_day)
       @morning_shifts = @shifts.where("EXTRACT(HOUR FROM start_time) >= 7 AND EXTRACT(HOUR FROM start_time) < 15")
       @afternoon_shifts = @shifts.where("EXTRACT(HOUR FROM start_time) >= 15 AND EXTRACT(HOUR FROM start_time) < 23")
-      @night_shifts = @shifts.where("EXTRACT(HOUR FROM start_time) >= 23 OR EXTRACT(HOUR FROM start_time) < 7")
+      @night = @shifts.where("EXTRACT(HOUR FROM start_time) >= 23 OR EXTRACT(HOUR FROM start_time) < 7")
+      @night_shifts = @night.limit(@night.count - 1)
+      @first_night_shift = @shifts.where("DATE(start_time) = ?", @selected_date.yesterday).where("EXTRACT(HOUR FROM start_time) >= 23 OR EXTRACT(HOUR FROM start_time) < 7").first
+
+
     rescue ArgumentError => e
       flash[:error] = "Invalid date format"
       redirect_to root_path

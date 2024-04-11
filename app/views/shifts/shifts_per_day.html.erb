@@ -5,7 +5,8 @@
       <%= link_to "Día Anterior", per_day_shifts_path(date: @selected_date.prev_day), class: "btn btn-primary" %>
     </div>
     <div class="col text-center">
-      <h5>Día <%= @shifts.first.day_of_week %> <%= @selected_date.strftime('%d-%m-%Y') %></h5>
+      <% habil = @shifts.first.bank_holiday ? 'Feriado' : 'Habil' %>
+      <h5>Día <%= @shifts.first.day_of_week %> <%= @selected_date.strftime('%d-%m-%Y') %> <%= habil %></h5>
     </div>
     <div class="col text-right">
       <%= link_to "Próximo Día", per_day_shifts_path(date: @selected_date.next_day), class: "btn btn-primary" %>
@@ -13,11 +14,11 @@
   </div>
 
   <% if @shifts.any? %>
-  <h6>Turnos Noche</h6>
-  <%= render 'shifts/shifts', shifts: @night_shifts %>
-  <h6>Turnos Mañana</h6>
+  <h6><strong>Turno Noche</strong></h6>
+  <%= render 'shifts/night_shifts', shifts: @night_shifts, first_night_shift: @first_night_shift %>
+  <h6><strong>Turno Mañana</strong></h6>
   <%= render 'shifts/shifts', shifts: @morning_shifts %>
-  <h6>Turnos Tarde</h6>
+  <h6><strong>Turno Tarde</strong></h6>
   <%= render 'shifts/shifts', shifts: @afternoon_shifts %>
 
   <% else %>
