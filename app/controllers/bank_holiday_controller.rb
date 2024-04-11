@@ -1,0 +1,2 @@
+class BankHolidayController < ApplicationController
+end

@@ -12,7 +12,7 @@ class AssignmentController < ApplicationController
   end
 
   def create
-    @assignment = Assignment.new(assignment_params)
+    @assignment = Assignment.new(employee_id: params[:employee_id], shift_id: params[:shift_id])
     if @assignment.save
       redirect_to assignments_path
     else
@@ -37,10 +37,6 @@ class AssignmentController < ApplicationController
   end
 
   private
-
-  def assignment_params
-    params.require(:assignment).permit(:start_time, :end_time, :type, :bank_holiday, :number_employees)
-  end
 
   def find_assignment
     @assignment = Assignment.find(params[:id])

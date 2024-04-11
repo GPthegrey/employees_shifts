@@ -32,11 +32,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_10_190733) do
 
   create_table "employees", force: :cascade do |t|
     t.string "name"
-    t.integer "age"
+    t.date "date_of_birth"
     t.string "position"
-    t.date "birthday"
     t.string "email"
     t.string "phone"
+    t.date "contract_start"
     t.boolean "available", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
