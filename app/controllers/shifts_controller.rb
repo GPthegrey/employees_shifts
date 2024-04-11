@@ -1,13 +1,21 @@
 class ShiftsController < ApplicationController
-  before_action :find_shift, only: [:show, :edit, :update, :destroy]
+  before_action :find_shift, only: [:edit, :update, :destroy]
   def index
-    @shifts = Shift.all
-    @selected_date = Date.today
+    @selected_date = params[:date] ? Date.parse(params[:date]) : Date.current
+    @shifts = Shift.where(start_time: @selected_date.beginning_of_month..@selected_date.end_of_month)
     @assingments = Assignment.where(date: @selected_date)
     @bank_holidays = BankHoliday.all
+    @month = @selected_date.strftime('%Y-%m')
+    @days = (@selected_date.beginning_of_month..@selected_date.end_of_month).map(&:day)
+  end
+
+  def shifts_per_day
+    @selected_date = Date.parse(params[:date])
+    @shifts = Shift.where("DATE(start_time) = ?", @selected_date)
   end
 
   def show
+
   end
 
   def new

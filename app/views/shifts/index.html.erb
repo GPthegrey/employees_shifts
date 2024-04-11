@@ -1,10 +1,18 @@
-<h1>Turnos del mes</h1>
+<h1>Turnos del mes: <%= @selected_date.strftime('%B %Y') %></h1>
 
 <div>
-  <%= link_to "Previous Month", shifts_path(date: @selected_date.prev_month), class: "btn btn-primary" %>
-  <%= link_to "Next Month", shifts_path(date: @selected_date.next_month), class: "btn btn-primary" %>
+  <%= link_to "Mes Previo", shifts_path(date: @selected_date.prev_month), class: "btn btn-primary" %>
+  <%= link_to "Mes que viene", shifts_path(date: @selected_date.next_month), class: "btn btn-primary" %>
 </div>
 
-<% (1..Date.today.end_of_month.day).each do |day| %>
-  <%= render 'shifts/day', shifts: @shifts, day: @selected_date.beginning_of_month.advance(days: day - 1) %>
-<% end %>
+<div class="calendar-grid">
+  <% @days.each do |day| %>
+    <div>
+      <%= link_to per_day_shifts_path(date: day), class: 'text-decoration-none' do %>
+        <div class="card">
+          <%= day %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -7,5 +7,9 @@ Rails.application.routes.draw do
       resources :assignments
     end
   end
-  resources :shifts
+  resources :shifts do
+    collection do
+      get 'per_day', to: 'shifts#shifts_per_day', as: 'per_day'
+    end
+  end
 end

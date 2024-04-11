@@ -1,0 +1,31 @@
+<div class="container mt-2">
+  <div class="row">
+    <div class="col justify-content-between">
+      <%= link_to "Día Anterior", per_day_shifts_path(date: @selected_date.prev_day), class: "btn btn-primary" %>
+    </div>
+    <div class="col text-center">
+      <h5>Día: <%= @selected_date.strftime('%Y-%m-%d') %></h5>
+    </div>
+    <div class="col text-right">
+      <%= link_to "Próximo Día", per_day_shifts_path(date: @selected_date.next_day), class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <% if @shifts.any? %>
+    <% @shifts.each do |shift| %>
+      <div>
+        <p><%= shift.start_time.strftime('%H:%M') %> - <%= shift.end_time.strftime('%H:%M') %></p>
+        <p>Día: <%= shift.day_of_week %></p>
+        <p>Turno: <%= shift.turno %></p>
+        <p>Número de empleados: <%= shift.number_employees %></p>
+        <ul>
+          <% shift.employees.each do |employee| %>
+            <li><p>Empleado: <%= employee.name %></p></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  <% else %>
+    <p>No hay turnos asignados para este día.</p>
+  <% end %>
+</div>

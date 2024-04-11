@@ -1,11 +1,10 @@
 <div class="container">
-<h1>Empleado <%= @employee.name %></h1>
-<p><%= @employee.date_of_birth %></p>
-<p><%= @employee.position %></p>
-<p><%= @employee.date_of_birth %></p>
-<p><%= @employee.email %></p>
-<p><%= @employee.phone %></p>
-<p><%= @employee.contract_start %></p>
+<h1>Empleado: <%= @employee.name %></h1>
+<p>Puesto: <%= @employee.position %></p>
+<p>Fecha de nacimiento: <%= @employee.date_of_birth %></p>
+<p>Email:<%= @employee.email %></p>
+<p>Telefono: <%= @employee.phone %></p>
+<p>Fecha de inicio de contrato: <%= @employee.contract_start %></p>
 <% if @employee.available %>
 <p class='text-success'>Disponible</p>
 <% else %>
