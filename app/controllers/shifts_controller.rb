@@ -10,8 +10,16 @@ class ShiftsController < ApplicationController
   end
 
   def shifts_per_day
-    @selected_date = Date.parse(params[:date])
-    @shifts = Shift.where("DATE(start_time) = ?", @selected_date)
+    begin
+      @selected_date = Date.parse(params[:date])
+      @shifts = Shift.where(start_time: @selected_date.beginning_of_day..@selected_date.end_of_day)
+      @morning_shifts = @shifts.where("EXTRACT(HOUR FROM start_time) >= 7 AND EXTRACT(HOUR FROM start_time) < 15")
+      @afternoon_shifts = @shifts.where("EXTRACT(HOUR FROM start_time) >= 15 AND EXTRACT(HOUR FROM start_time) < 23")
+      @night_shifts = @shifts.where("EXTRACT(HOUR FROM start_time) >= 23 OR EXTRACT(HOUR FROM start_time) < 7")
+    rescue ArgumentError => e
+      flash[:error] = "Invalid date format"
+      redirect_to root_path
+    end
   end
 
   def show
