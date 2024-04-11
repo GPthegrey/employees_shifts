@@ -1,1 +1,19 @@
+<div class="container">
 <h1>Empleado <%= @employee.name %></h1>
+<p><%= @employee.date_of_birth %></p>
+<p><%= @employee.position %></p>
+<p><%= @employee.date_of_birth %></p>
+<p><%= @employee.email %></p>
+<p><%= @employee.phone %></p>
+<p><%= @employee.contract_start %></p>
+<% if @employee.available %>
+<p class='text-success'>Disponible</p>
+<% else %>
+<p class='text-danger'>No Disponible</p>
+<% end %>
+
+<div class='d-flex justify-content-around'>
+  <%= link_to 'Editar', edit_employee_path(@employee), class: 'btn btn-primary' %>
+  <%= link_to 'Eliminar', employee_path(@employee), method: :delete, data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro?" }, class: 'btn btn-danger' %>
+</div>
+</div>

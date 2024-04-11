@@ -3,6 +3,8 @@ class ShiftsController < ApplicationController
   def index
     @shifts = Shift.all
     @selected_date = Date.today
+    @assingments = Assignment.where(date: @selected_date)
+    @bank_holidays = BankHoliday.all
   end
 
   def show
