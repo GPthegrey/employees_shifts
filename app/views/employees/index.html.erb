@@ -1,6 +1,8 @@
+<%= link_to "Back", :back %>
+
 <h1>Todos los empleados</h1>
   <ul>
-  <%= @employees.each do |employee| %>
+  <% @employees.each do |employee| %>
       <%= link_to employee_path(employee), class: 'text-decoration-none' do %>
         <li><p><%= employee.name %>: <%= employee.position %></p></li>
       <% end %>

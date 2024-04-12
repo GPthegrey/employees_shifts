@@ -4,6 +4,7 @@ class ShiftsController < ApplicationController
     @selected_date = params[:date] ? Date.parse(params[:date]) : Date.current
     @shifts = Shift.where(start_time: @selected_date.beginning_of_month..@selected_date.end_of_month)
     @assingments = Assignment.where(date: @selected_date)
+    @assingment = Assignment.new
     @bank_holidays = BankHoliday.all
     @month = @selected_date.strftime('%m-%Y')
     @days = (@selected_date.beginning_of_month..@selected_date.end_of_month)

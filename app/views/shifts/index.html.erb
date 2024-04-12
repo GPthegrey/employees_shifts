@@ -1,6 +1,14 @@
-<div class="container m-4">
-  <h1>Turnos del mes: <%= @selected_date.strftime('%B %Y') %></h1>
-
+<div class="row m-4">
+  <div class='d-flex'>
+    <h1>Turnos del mes: <%= @selected_date.strftime('%B %Y') %></h1>
+    <div class='p-2'>
+      <%= form_for @assingment, url: assignments_path, method: :post, class: "d-inline" do |f| %>
+        <%= f.button type: "submit", class: "btn btn-outline-primary btn-sm mx-2" do %>
+          Asignar turnos
+        <% end %>
+      <% end %>
+    </div>
+  </div>
   <div>
     <%= link_to "Mes Previo", shifts_path(date: @selected_date.prev_month), class: "btn btn-primary" %>
     <%= link_to "Mes que viene", shifts_path(date: @selected_date.next_month), class: "btn btn-primary" %>
