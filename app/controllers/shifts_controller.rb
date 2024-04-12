@@ -5,8 +5,8 @@ class ShiftsController < ApplicationController
     @shifts = Shift.where(start_time: @selected_date.beginning_of_month..@selected_date.end_of_month)
     @assingments = Assignment.where(date: @selected_date)
     @bank_holidays = BankHoliday.all
-    @month = @selected_date.strftime('%Y-%m')
-    @days = (@selected_date.beginning_of_month..@selected_date.end_of_month).map(&:day)
+    @month = @selected_date.strftime('%m-%Y')
+    @days = (@selected_date.beginning_of_month..@selected_date.end_of_month)
   end
 
   def shifts_per_day
@@ -17,8 +17,9 @@ class ShiftsController < ApplicationController
       @afternoon_shifts = @shifts.where("EXTRACT(HOUR FROM start_time) >= 15 AND EXTRACT(HOUR FROM start_time) < 23")
       @night = @shifts.where("EXTRACT(HOUR FROM start_time) >= 23 OR EXTRACT(HOUR FROM start_time) < 7")
       @night_shifts = @night.limit(@night.count - 1)
-      @first_night_shift = @shifts.where("DATE(start_time) = ?", @selected_date.yesterday).where("EXTRACT(HOUR FROM start_time) >= 23 OR EXTRACT(HOUR FROM start_time) < 7").first
-
+      @first_night_shift = Shift.where(start_time: @selected_date.yesterday.beginning_of_day..@selected_date.yesterday.end_of_day)
+      .where("EXTRACT(HOUR FROM start_time) = ?", 23)
+      .where("EXTRACT(HOUR FROM end_time) = ?", 0).first
 
     rescue ArgumentError => e
       flash[:error] = "Invalid date format"

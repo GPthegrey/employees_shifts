@@ -6,7 +6,7 @@
     </div>
     <div class="col text-center">
       <% habil = @shifts.first.bank_holiday ? 'Feriado' : 'Habil' %>
-      <h5>Día <%= @shifts.first.day_of_week %> <%= @selected_date.strftime('%d-%m-%Y') %> <%= habil %></h5>
+      <h5>Día <%= @shifts.first.day_of_week %> <%= @selected_date.strftime('%d-%m-%Y') %> <strong><%= habil %></strong></h5>
     </div>
     <div class="col text-right">
       <%= link_to "Próximo Día", per_day_shifts_path(date: @selected_date.next_day), class: "btn btn-primary" %>
