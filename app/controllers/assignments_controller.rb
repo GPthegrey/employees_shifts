@@ -12,17 +12,24 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    @shifts = Shift.all
-    @shifts.each do |shift|
-      (1..shift.number_employees).each do |i|
-        counter = 0
-        until counter == 8
+    start_date = Date.new(2024, 4, 11)
+    end_date = Date.new(2024, 4, 30)
+    while start_date <= end_date
+      @shifts = Shift.where(start_time: start_date)
+      @shifts.each do |shift|
+        shift.number_employees.times do
+          if shift.turno == "noche"
+            @employee = Employee.where(position: "playero").sample
+          else
+            @employee = Employee.all.sample
+          end
           @assignment = Assignment.new
           @assignment.shift = shift
-          @assignment.employee = Employee.all.sample
+          @assignment.employee = @employee
           @assignment.save
         end
       end
+      start_date += 1.day
     end
     redirect_to shifts_path
   end
