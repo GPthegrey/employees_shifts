@@ -12,13 +12,19 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    raise
-    @assignment = Assignment.new(employee_id: params[:employee_id], shift_id: params[:shift_id])
-    if @assignment.save
-      redirect_to assignments_path
-    else
-      render :new
+    @shifts = Shift.all
+    @shifts.each do |shift|
+      (1..shift.number_employees).each do |i|
+        counter = 0
+        until counter == 8
+          @assignment = Assignment.new
+          @assignment.shift = shift
+          @assignment.employee = Employee.all.sample
+          @assignment.save
+        end
+      end
     end
+    redirect_to shifts_path
   end
 
   def edit
