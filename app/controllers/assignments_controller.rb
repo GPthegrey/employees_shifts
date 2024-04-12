@@ -1,4 +1,4 @@
-class AssignmentController < ApplicationController
+class AssignmentsController < ApplicationController
   before_action :find_assignment, only: [:show, :edit, :update, :destroy]
   def index
     @assignments = Assignment.all
@@ -12,6 +12,7 @@ class AssignmentController < ApplicationController
   end
 
   def create
+    raise
     @assignment = Assignment.new(employee_id: params[:employee_id], shift_id: params[:shift_id])
     if @assignment.save
       redirect_to assignments_path
