@@ -1,5 +1,6 @@
 class AssignmentsController < ApplicationController
   before_action :find_assignment, only: [:show, :edit, :update, :destroy]
+
   def index
     @assignments = Assignment.all
   end
@@ -12,23 +13,42 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    start_date = Date.new(2024, 4, 11)
+    start_date = Date.new(2024, 4, 13)
     end_date = Date.new(2024, 4, 30)
+
     while start_date <= end_date
-      @shifts = Shift.where(start_time: start_date)
-      @shifts.each do |shift|
-        shift.number_employees.times do
-          if shift.turno == "noche"
-            @employee = Employee.where(position: "playero").sample
-          else
-            @employee = Employee.all.sample
-          end
-          @assignment = Assignment.new
-          @assignment.shift = shift
-          @assignment.employee = @employee
-          @assignment.save
-        end
-      end
+      # Shifts
+      @shifts = Shift.where("start_time <= ? AND end_time >= ?", start_date.end_of_day, start_date.beginning_of_day)
+      @shifts = @shifts.limit(@shifts.count - 1)
+
+      # Fetch morning, afternoon, and night shifts
+      @shifts_morning = @shifts.where("EXTRACT(HOUR FROM start_time) >= 7 AND EXTRACT(HOUR FROM start_time) < 15")
+      @shifts_afternoon = @shifts.where("EXTRACT(HOUR FROM start_time) >= 15 AND EXTRACT(HOUR FROM start_time) < 23")
+      @shifts_night = @shifts.where("EXTRACT(HOUR FROM start_time) >= 23 OR EXTRACT(HOUR FROM start_time) < 7")
+
+      # Employees
+      employees_needed = @shifts_morning.first.number_employees * 2
+      @employees_total = Employee.all.limit(employees_needed)
+
+      # Fetch morning employees
+      @employees_morning = @employees_total.limit(@shifts_morning.first.number_employees)
+
+      # Fetch afternoon employees
+      remaining_employees_needed = employees_needed - @shifts_morning.first.number_employees
+      @employees_afternoon = @employees_total.where.not(id: @employees_morning.pluck(:id)).limit(remaining_employees_needed)
+
+      # Fetch night shift employees
+      @employees_night = Employee.where(position: 'playero').where.not(id: @employees_morning.pluck(:id) + @employees_afternoon.pluck(:id)).limit(@shifts_night.first.number_employees)
+
+      # Assign morning employees
+      assign_employees_to_shifts(@shifts_morning, @employees_morning)
+
+      # Assign afternoon employees
+      assign_employees_to_shifts(@shifts_afternoon, @employees_afternoon)
+
+      # Assign night shift employees
+      assign_employees_to_shifts(@shifts_night, @employees_night)
+
       start_date += 1.day
     end
     redirect_to shifts_path
@@ -54,5 +74,19 @@ class AssignmentsController < ApplicationController
 
   def find_assignment
     @assignment = Assignment.find(params[:id])
+  end
+
+  def assign_employees_to_shifts(shifts, employees)
+    shifts.each do |shift|
+      employees.each_with_index do |employee, index|
+        @assignment = Assignment.new(shift: shift, employee: employee)
+        if @assignment.save
+          employees = employees.reject.with_index { |_, i| i == index }
+          break
+        else
+          puts 'No hay empleados disponibles. Asignar empleado de forma manual'
+        end
+      end
+    end
   end
 end
