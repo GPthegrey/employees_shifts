@@ -19,7 +19,6 @@ class AssignmentsController < ApplicationController
     while start_date <= end_date
       # Shifts
       @shifts = Shift.where("start_time <= ? AND end_time >= ?", start_date.end_of_day, start_date.beginning_of_day)
-      @shifts = @shifts.limit(@shifts.count - 1)
 
       # Fetch morning, afternoon, and night shifts
       @shifts_morning = @shifts.where("EXTRACT(HOUR FROM start_time) >= 7 AND EXTRACT(HOUR FROM start_time) < 15")
@@ -77,14 +76,20 @@ class AssignmentsController < ApplicationController
   end
 
   def assign_employees_to_shifts(shifts, employees)
+    assign_employees = employees
     shifts.each do |shift|
-      employees.each_with_index do |employee, index|
-        @assignment = Assignment.new(shift: shift, employee: employee)
-        if @assignment.save
-          employees = employees.reject.with_index { |_, i| i == index }
-          break
+      shift.number_employees.times do
+        assign_employee = assign_employees.first
+        if assign_employee
+          @assignment = Assignment.new(shift: shift, employee: assign_employee)
+          if @assignment.save
+            assign_employees = assign_employees.reject { |employee| employee == assign_employee }
+          else
+            puts 'Error creating assignment'
+          end
         else
           puts 'No hay empleados disponibles. Asignar empleado de forma manual'
+          break
         end
       end
     end

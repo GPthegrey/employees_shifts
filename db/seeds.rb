@@ -13,9 +13,9 @@
 #destroy all records
 puts 'destroying all records'
 BankHoliday.destroy_all
+Assignment.destroy_all
 Shift.destroy_all
 Employee.destroy_all
-Assignment.destroy_all
 
 puts 'creating employees'
 
@@ -52,6 +52,7 @@ end_date = Date.new(2024, 12, 31)
 bank_holidays = BankHoliday.pluck(:date)
 
 # Define the create_shift method
+puts 'creating shifts'
 def create_shift(start_time, end_time, turno, day_of_week, bank_holiday, number_employees)
   Shift.create(
     start_time: start_time,
@@ -80,7 +81,7 @@ end
 
     # Determine number of employees based on shift type and bank holiday
     number_employees =
-      if bank_holidays.include?(date)
+      if bank_holidays.include?(date) || date.sunday?
         (turno == 'mañana' || turno == 'tarde') ? 3 : 2
       else
         (turno == 'mañana' || turno == 'tarde') ? 4 : 2

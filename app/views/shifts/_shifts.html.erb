@@ -1,9 +1,11 @@
 <div class="row">
   <% shifts.each do |shift| %>
-    <div class='col-1 border'>
+    <div class='col-4 border'>
       <p>Hora: <%= shift.start_time.strftime('%H:%M') %> - <%= shift.end_time.strftime('%H:%M') %></p>
       <p>Número de empleados: <%= shift.number_employees %></p>
-        <% shift.employees.each do |employee| %>
+    </div>
+    <div class='col-6 border'>
+      <% shift.employees.each do |employee| %>
           <p>Empleado: <%= employee.name %></p>
         <% end %>
     </div>
