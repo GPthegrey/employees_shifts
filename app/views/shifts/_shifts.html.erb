@@ -6,8 +6,13 @@
     </div>
     <div class='col-6 border'>
       <% shift.employees.each do |employee| %>
-          <p>Empleado: <%= employee.name %></p>
-        <% end %>
+        <div class='d-flex'>
+          <p>Empleado: <%= employee.name %> </p>
+          <%= link_to assignments_path(@assignment_delete), data: { turbo_method: :delete, turbo_confirm: "Seguro que desea eliminar el turno?" } do %>
+          <i class="fa-solid fa-xmark"></i>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </div>

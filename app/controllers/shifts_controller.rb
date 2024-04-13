@@ -8,6 +8,7 @@ class ShiftsController < ApplicationController
     @bank_holidays = BankHoliday.all
     @month = @selected_date.strftime('%m-%Y')
     @days = (@selected_date.beginning_of_month..@selected_date.end_of_month)
+    @assignment_delete = Assignment.find(params[:assignment_id])
   end
 
   def shifts_per_day

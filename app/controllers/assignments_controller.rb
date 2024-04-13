@@ -53,6 +53,13 @@ class AssignmentsController < ApplicationController
     redirect_to shifts_path
   end
 
+  def refuerzo
+    @assignment = Assignment.new(assignment_params)
+    if @assignment.save
+      redirect_to per_day_shifts_path
+    end
+  end
+
   def edit
   end
 
@@ -73,6 +80,10 @@ class AssignmentsController < ApplicationController
 
   def find_assignment
     @assignment = Assignment.find(params[:id])
+  end
+
+  def assignment_params
+    params.require(:assignment).permit(:shift_id, :employee_id)
   end
 
   def assign_employees_to_shifts(shifts, employees)
