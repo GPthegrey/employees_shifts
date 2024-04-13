@@ -15,7 +15,7 @@
 
   <% if @shifts.any? %>
   <h6><strong>Turno Noche</strong></h6>
-  <%= render 'shifts/night_shifts', shifts: @night_shifts, first_night_shift: @first_night_shift %>
+  <%= render 'shifts/shifts', shifts: @night_shifts %>
   <h6><strong>Turno Mañana</strong></h6>
   <%= render 'shifts/shifts', shifts: @morning_shifts %>
   <h6><strong>Turno Tarde</strong></h6>

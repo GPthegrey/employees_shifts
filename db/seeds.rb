@@ -15,21 +15,22 @@ puts 'destroying all records'
 BankHoliday.destroy_all
 Shift.destroy_all
 Employee.destroy_all
+Assignment.destroy_all
 
 puts 'creating employees'
 
 Employee.create!(name: 'JORGE', position: 'encargado', date_of_birth: '1990-01-01')
 Employee.create!(name: 'MARCOS', position: 'playero', date_of_birth: '1985-06-22')
-Employee.create!(name: 'VALEN', position: 'playero', date_of_birth: '1990-11-12')
-Employee.create!(name: 'POME', position: 'playero', date_of_birth: '1990-04-17')
-Employee.create!(name: 'J.L', position: 'playero', date_of_birth: '1990-04-17')
-Employee.create!(name: 'GONZA', position: 'playero', date_of_birth: '1990-09-11')
-Employee.create!(name: 'Patricio', position: 'playero', date_of_birth: '1990-08-08')
-Employee.create!(name: 'BENJA', position: 'aprendiz', date_of_birth: '1990-04-10')
+Employee.create!(name: 'VALEN', position: 'playero', date_of_birth: '1994-11-12')
+Employee.create!(name: 'POME', position: 'playero', date_of_birth: '1977-04-17')
+Employee.create!(name: 'J.L', position: 'playero', date_of_birth: '1983-04-17')
+Employee.create!(name: 'GONZA', position: 'playero', date_of_birth: '1972-09-11')
+Employee.create!(name: 'Patricio', position: 'playero', date_of_birth: '1991-08-08')
+Employee.create!(name: 'BENJA', position: 'aprendiz', date_of_birth: '1998-04-10')
 Employee.create!(name: 'ARTURO', position: 'playero', date_of_birth: '1990-06-01')
-Employee.create!(name: 'CRISTIAN', position: 'playero', date_of_birth: '1990-12-12')
-Employee.create!(name: 'ANGEL', position: 'aprendiz', date_of_birth: '1990-19-02')
-Employee.create!(name: 'MICA', position: 'aprendiz', date_of_birth: '1990-29-03')
+Employee.create!(name: 'CRISTIAN', position: 'playero', date_of_birth: '1968-12-12')
+Employee.create!(name: 'ANGEL', position: 'aprendiz', date_of_birth: '2000-19-02')
+Employee.create!(name: 'MICA', position: 'aprendiz', date_of_birth: '2002-29-03')
 
 puts 'creating bank holidays'
 BankHoliday.create(date: Date.new(2024, 5, 1), name: 'dia del trabajador')
@@ -47,43 +48,45 @@ BankHoliday.create(date: Date.new(2024, 12, 25), name: 'navidad')
 start_date = Date.new(2024, 4, 11)
 end_date = Date.new(2024, 12, 31)
 
-# Iterate through each hour of the year
-(start_date..end_date).each do |date|
-  (0..23).each do |hour|
-    start_time = DateTime.new(date.year, date.month, date.day, hour, 0, 0)
-    end_time = start_time + 1.hour
+# Fetch all bank holidays once
+bank_holidays = BankHoliday.pluck(:date)
 
-    # Determine shift type and if it's a bank holiday
+# Define the create_shift method
+def create_shift(start_time, end_time, turno, day_of_week, bank_holiday, number_employees)
+  Shift.create(
+    start_time: start_time,
+    end_time: end_time,
+    turno: turno,
+    day_of_week: day_of_week,
+    bank_holiday: bank_holiday,
+    number_employees: number_employees
+  )
+end
+
+# Iterate through each day of the year
+(start_date..end_date).each do |date|
+  # Iterate through each shift for the day
+  [7, 15, 23].each do |hour|
+    start_time = DateTime.new(date.year, date.month, date.day, hour, 0, 0)
+    end_time = start_time + 8.hours
+
+    # Determine shift type
     turno =
-      if start_time.hour >= 7 && start_time.hour < 15
-        'mañana'
-      elsif start_time.hour >= 15 && start_time.hour < 23
-        'tarde'
-      else
-        'noche'
+      case hour
+      when 7...15 then 'mañana'
+      when 15...23 then 'tarde'
+      else 'noche'
       end
-    day_of_week = start_time.strftime('%A')
-    bank_holiday = BankHoliday.exists?(date: start_time.to_date) || day_of_week == 'Sunday'
 
     # Determine number of employees based on shift type and bank holiday
     number_employees =
-      if !bank_holiday && (turno == 'mañana' || turno == 'tarde')
-        4
-      elsif bank_holiday && (turno == 'mañana' || turno == 'tarde')
-        3
+      if bank_holidays.include?(date)
+        (turno == 'mañana' || turno == 'tarde') ? 3 : 2
       else
-        2
+        (turno == 'mañana' || turno == 'tarde') ? 4 : 2
       end
 
-    # Create a new shift object for each hour
-    puts 'creating shift'
-    Shift.create(
-      start_time: start_time,
-      end_time: end_time,
-      turno: turno,
-      day_of_week: day_of_week,
-      bank_holiday: bank_holiday,
-      number_employees: number_employees
-    )
+    # Create the shift
+    create_shift(start_time, end_time, turno, date.strftime('%A'), bank_holidays.include?(date), number_employees)
   end
 end
