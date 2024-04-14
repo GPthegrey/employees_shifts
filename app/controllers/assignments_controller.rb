@@ -72,6 +72,7 @@ class AssignmentsController < ApplicationController
   end
 
   def destroy
+    raise
     @assignment.destroy
     redirect_to assignments_path
   end

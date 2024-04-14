@@ -33,6 +33,8 @@ Employee.create!(name: 'ANGEL', position: 'aprendiz', date_of_birth: '2000-19-02
 Employee.create!(name: 'MICA', position: 'aprendiz', date_of_birth: '2002-29-03')
 
 puts 'creating bank holidays'
+BankHoliday.create(date: Date.new(2024, 4, 1), name: 'Puente: semana santa')
+BankHoliday.create(date: Date.new(2024, 4, 2), name: 'dia de Malvinas')
 BankHoliday.create(date: Date.new(2024, 5, 1), name: 'dia del trabajador')
 BankHoliday.create(date: Date.new(2024, 5, 25), name: 'primer gobierno patrio')
 BankHoliday.create(date: Date.new(2024, 6, 17), name: 'paso a la inmortalidad del general martin miguel de guemes')
@@ -45,7 +47,7 @@ BankHoliday.create(date: Date.new(2024, 12, 24), name: 'noche buena')
 BankHoliday.create(date: Date.new(2024, 12, 25), name: 'navidad')
 
 # Define the start and end date for the year
-start_date = Date.new(2024, 4, 11)
+start_date = Date.new(2024, 4, 01)
 end_date = Date.new(2024, 12, 31)
 
 # Fetch all bank holidays once

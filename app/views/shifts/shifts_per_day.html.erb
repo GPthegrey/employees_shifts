@@ -19,6 +19,8 @@
     </div>
   </div>
 
+<%= render 'shifts/refuerzo' %>
+
   <% if @shifts.any? %>
   <h6><strong>Turno Noche</strong></h6>
   <%= render 'shifts/shifts', shifts: @night_shifts %>
